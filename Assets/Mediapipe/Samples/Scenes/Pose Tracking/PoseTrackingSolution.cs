@@ -23,6 +23,9 @@ namespace Mediapipe.Unity.PoseTracking
 
     private Coroutine _coroutine;
 
+    public LandmarkList poseWorldLandmarkList;
+    public NormalizedLandmarkList poseNormalisedLandmarkList;
+
     public RunningMode runningMode;
 
     public PoseTrackingGraph.ModelComplexity modelComplexity
@@ -158,11 +161,13 @@ namespace Mediapipe.Unity.PoseTracking
     private void OnPoseLandmarksOutput(NormalizedLandmarkList poseLandmarks)
     {
       _poseLandmarksAnnotationController.DrawLater(poseLandmarks);
+      poseNormalisedLandmarkList = poseLandmarks;
     }
 
     private void OnPoseWorldLandmarksOutput(LandmarkList poseWorldLandmarks)
     {
       _poseWorldLandmarksAnnotationController.DrawLater(poseWorldLandmarks);
+      poseWorldLandmarkList = poseWorldLandmarks;
     }
 
     private void OnRoiFromLandmarksOutput(NormalizedRect roiFromLandmarks)
