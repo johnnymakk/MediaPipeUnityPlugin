@@ -59,7 +59,7 @@ namespace Mediapipe.Unity.PoseTracking
         string bodyPart = Enum.GetName(typeof(BodyPosName), i);
         Debug.Log("bodyPosName: " + bodyPart);
         var index = (BodyLandmarks)Enum.Parse(typeof(BodyLandmarks), bodyPart);
-        //Debug.Log("index: " + (int)index);
+        Debug.Log("index: " + (int)index);
         bodyPositions[i].x = _myLandmarkList.Landmark[(int)index].X;
         bodyPositions[i].y = _myLandmarkList.Landmark[(int)index].Y;
         bodyPositions[i].z = _myLandmarkList.Landmark[(int)index].Z;
