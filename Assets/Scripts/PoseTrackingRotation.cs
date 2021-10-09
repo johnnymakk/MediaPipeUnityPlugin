@@ -11,12 +11,12 @@ namespace Mediapipe.Unity.PoseTracking
 
 
     private PoseTrackingSolution _poseTrackingSolution;
-    private LandmarkList myLandmarkList;
-    private NormalizedLandmarkList myNormalisedLandmarkList;
-    private float firstRotationZ = 0f;
+    private LandmarkList _myLandmarkList;
+    private NormalizedLandmarkList _myNormalisedLandmarkList;
+    private float _firstRotationZ = 0f;
     public Transform myGO;
-    private enum bodyLandmarks { Nose, Left_eye_inner, Left_eye, Left_eye_outer, Right_eye_inner, Right_eye, Right_eye_outer, Left_ear, Right_ear, Left_mouth, Right_mouth, Left_shoulder, Right_shoulder, Left_elbow, Right_elbow, Left_wrist, Right_wrist, Left_pinky, Right_pinky, Left_index, Right_index, Left_thumb, Right_thumb, Left_hip, Right_hip, Left_knee, Right_knee, Left_ankle, Right_ankle, Left_heel, Right_heel, Left_foot_index, Right_foot_index };
-    private enum bodyPosName { Left_shoulder, Right_shoulder, Left_elbow, Right_elbow, Left_wrist, Right_wrist, Left_index, Right_index, Left_hip, Right_hip, Left_knee, Right_knee, Left_ankle, Right_ankle, Left_heel, Right_heel };
+    private enum BodyLandmarks { Nose, Left_eye_inner, Left_eye, Left_eye_outer, Right_eye_inner, Right_eye, Right_eye_outer, Left_ear, Right_ear, Left_mouth, Right_mouth, Left_shoulder, Right_shoulder, Left_elbow, Right_elbow, Left_wrist, Right_wrist, Left_pinky, Right_pinky, Left_index, Right_index, Left_thumb, Right_thumb, Left_hip, Right_hip, Left_knee, Right_knee, Left_ankle, Right_ankle, Left_heel, Right_heel, Left_foot_index, Right_foot_index };
+    private enum BodyPosName { Left_shoulder, Right_shoulder, Left_elbow, Right_elbow, Left_wrist, Right_wrist, Left_index, Right_index, Left_hip, Right_hip, Left_knee, Right_knee, Left_ankle, Right_ankle, Left_heel, Right_heel };
     private Vector3[] bodyPositions;
     // Start is called before the first frame update
     void Start()
@@ -29,21 +29,21 @@ namespace Mediapipe.Unity.PoseTracking
     void Update()
     {
       //LandmarkList myLandmarkValues = poseTrackingSolution.value.poseWorldLandmarks;
-      myLandmarkList = _poseTrackingSolution.poseWorldLandmarkList;
-      myNormalisedLandmarkList = _poseTrackingSolution.poseNormalisedLandmarkList;
-      firstRotationZ = myLandmarkList.Landmark[(int)bodyLandmarks.Right_wrist].X;
+      _myLandmarkList = _poseTrackingSolution.poseWorldLandmarkList;
+      _myNormalisedLandmarkList = _poseTrackingSolution.poseNormalisedLandmarkList;
+      _firstRotationZ = _myLandmarkList.Landmark[(int)BodyLandmarks.Right_wrist].X;
       //Pose(myNormalisedLandmarkList.Landmark);
       //bodyPositions[(int)bodyPosName.WristLeft] = MapMediapipePosition(myNormalisedLandmarkList.Landmark[(int)bodyLandmarks.LEFT_WRIST]);
-      bodyPositions[(int)bodyPosName.Left_wrist].x = myLandmarkList.Landmark[(int)bodyLandmarks.Left_wrist].X;
-      bodyPositions[(int)bodyPosName.Left_wrist].y = myLandmarkList.Landmark[(int)bodyLandmarks.Left_wrist].Y;
-      bodyPositions[(int)bodyPosName.Left_wrist].z = myLandmarkList.Landmark[(int)bodyLandmarks.Left_wrist].Z;
+      bodyPositions[(int)BodyPosName.Left_wrist].x = _myLandmarkList.Landmark[(int)BodyLandmarks.Left_wrist].X;
+      bodyPositions[(int)BodyPosName.Left_wrist].y = _myLandmarkList.Landmark[(int)BodyLandmarks.Left_wrist].Y;
+      bodyPositions[(int)BodyPosName.Left_wrist].z = _myLandmarkList.Landmark[(int)BodyLandmarks.Left_wrist].Z;
       GetBodyPositionsFromLandmarks();
       //int enumNum = (int)bodyPosName.Left_wrist;
       //Debug.Log("tracking values :" + myLandmarkList);
       //Debug.Log("landmark 0 X: " + firstRotationZ);
       //Debug.Log("normalised landmarks: " + myNormalisedLandmarkList);
       //Debug.Log("Left Wrist: " + bodyPositions[(int)bodyPosName.Left_wrist].x);
-      myGO.position = bodyPositions[(int)bodyPosName.Left_wrist];
+      myGO.position = bodyPositions[(int)BodyPosName.Left_wrist];
     }
 
     private Vector3 MapMediapipePosition(NormalizedLandmark landmark)
@@ -56,13 +56,13 @@ namespace Mediapipe.Unity.PoseTracking
 
       for (int i = 0; i < 16; i++)
       {
-        string bodyPart = Enum.GetName(typeof(bodyPosName), i);
+        string bodyPart = Enum.GetName(typeof(BodyPosName), i);
         Debug.Log("bodyPosName: " + bodyPart);
-        var index = (bodyLandmarks)Enum.Parse(typeof(bodyLandmarks), bodyPart);
+        var index = (BodyLandmarks)Enum.Parse(typeof(BodyLandmarks), bodyPart);
         //Debug.Log("index: " + (int)index);
-        bodyPositions[i].x = myLandmarkList.Landmark[(int)index].X;
-        bodyPositions[i].y = myLandmarkList.Landmark[(int)index].Y;
-        bodyPositions[i].z = myLandmarkList.Landmark[(int)index].Z;
+        bodyPositions[i].x = _myLandmarkList.Landmark[(int)index].X;
+        bodyPositions[i].y = _myLandmarkList.Landmark[(int)index].Y;
+        bodyPositions[i].z = _myLandmarkList.Landmark[(int)index].Z;
       }
     }
 
