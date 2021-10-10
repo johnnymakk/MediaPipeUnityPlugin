@@ -27,7 +27,7 @@ namespace Mediapipe.Unity.PoseTracking
       _poseTrackingSolution = GameObject.FindObjectOfType<PoseTrackingSolution>();
       _bodyPositions = new Vector3[16];
       _bodyObjects = new GameObject[_totalMembersInBodyPosNameEnum];
-      InstantiateJoints();
+      InstantiateJointpositions();
     }
 
     // Update is called once per frame
@@ -49,7 +49,7 @@ namespace Mediapipe.Unity.PoseTracking
       //Debug.Log("normalised landmarks: " + myNormalisedLandmarkList);
       //Debug.Log("Left Wrist: " + bodyPositions[(int)bodyPosName.Left_wrist].x);
       //myGO.transform.position = _bodyPositions[(int)BodyPosName.Left_wrist];
-      UpdateJoints();
+      UpdateJointPositions();
     }
 
     private Vector3 MapMediapipePosition(NormalizedLandmark landmark)
@@ -73,7 +73,7 @@ namespace Mediapipe.Unity.PoseTracking
       }
     }
 
-    private void InstantiateJoints()
+    private void InstantiateJointpositions()
     {
       for(int i = 0; i < _totalMembersInBodyPosNameEnum; i++)
       {
@@ -83,7 +83,7 @@ namespace Mediapipe.Unity.PoseTracking
       }
     }
 
-    private void UpdateJoints()
+    private void UpdateJointPositions()
     {
       for (int i = 0; i < _totalMembersInBodyPosNameEnum; i++)
       {
