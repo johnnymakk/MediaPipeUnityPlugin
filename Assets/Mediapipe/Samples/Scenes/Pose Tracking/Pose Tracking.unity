@@ -475,6 +475,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myGO: {fileID: 8571683677569543353, guid: 859e62dfe2ad07846a0465d67f257bde, type: 3}
+  _worldNotNormalized: 0
+  _bodyScale: 100
 --- !u!1 &298505179
 GameObject:
   m_ObjectHideFlags: 0

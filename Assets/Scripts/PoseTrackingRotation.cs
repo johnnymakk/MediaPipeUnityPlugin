@@ -8,14 +8,17 @@ namespace Mediapipe.Unity.PoseTracking
 {
   public class PoseTrackingRotation : MonoBehaviour
   {
-
+    [SerializeField]
+    private GameObject myGO;
+    [SerializeField]
+    private bool _worldNotNormalized = false;
 
     private PoseTrackingSolution _poseTrackingSolution;
     private LandmarkList _myLandmarkList;
     private NormalizedLandmarkList _myNormalisedLandmarkList;
-    public float _bodyScale = 10f;
+    public float _bodyScale = 0f;
     private float _firstRotationZ = 0f;
-    public GameObject myGO;
+    
     private enum BodyLandmarks { Nose, Left_eye_inner, Left_eye, Left_eye_outer, Right_eye_inner, Right_eye, Right_eye_outer, Left_ear, Right_ear, Left_mouth, Right_mouth, Left_shoulder, Right_shoulder, Left_elbow, Right_elbow, Left_wrist, Right_wrist, Left_pinky, Right_pinky, Left_index, Right_index, Left_thumb, Right_thumb, Left_hip, Right_hip, Left_knee, Right_knee, Left_ankle, Right_ankle, Left_heel, Right_heel, Left_foot_index, Right_foot_index };
     private enum BodyPosName { Left_shoulder, Right_shoulder, Left_elbow, Right_elbow, Left_wrist, Right_wrist, Left_index, Right_index, Left_hip, Right_hip, Left_knee, Right_knee, Left_ankle, Right_ankle, Left_heel, Right_heel };
     private Vector3[] _bodyPositions;
@@ -42,7 +45,16 @@ namespace Mediapipe.Unity.PoseTracking
       //_bodyPositions[(int)BodyPosName.Left_wrist].x = _myLandmarkList.Landmark[(int)BodyLandmarks.Left_wrist].X;
       //_bodyPositions[(int)BodyPosName.Left_wrist].y = _myLandmarkList.Landmark[(int)BodyLandmarks.Left_wrist].Y;
       //_bodyPositions[(int)BodyPosName.Left_wrist].z = _myLandmarkList.Landmark[(int)BodyLandmarks.Left_wrist].Z;
-      GetBodyPositionsFromLandmarks();
+      if(_worldNotNormalized)
+      {
+        GetBodyPositionsFromWorldLandmarks();
+      }
+      else
+      {
+        GetBodyPositionsFromNormailzedLandmarks();
+      }
+      //GetBodyPositionsFromWorldLandmarks();
+      //GetBodyPositionsFromNormailzedLandmarks();
       //int enumNum = (int)bodyPosName.Left_wrist;
       //Debug.Log("tracking values :" + myLandmarkList);
       //Debug.Log("landmark 0 X: " + firstRotationZ);
@@ -57,7 +69,7 @@ namespace Mediapipe.Unity.PoseTracking
       return new Vector3(landmark.X * 640f, (1f - landmark.Y) * 480f, -320f * landmark.Z);
     }
 
-    private void GetBodyPositionsFromLandmarks()
+    private void GetBodyPositionsFromWorldLandmarks()
     {
       //var totalMembersInEnum = Enum.GetNames(typeof(BodyPosName)).Length;
       //assign landmark Vector3 positions to array of main joints
@@ -73,6 +85,23 @@ namespace Mediapipe.Unity.PoseTracking
       }
     }
 
+    private void GetBodyPositionsFromNormailzedLandmarks()
+    {
+      //var totalMembersInEnum = Enum.GetNames(typeof(BodyPosName)).Length;
+      //assign landmark Vector3 positions to array of main joints
+      for (int i = 0; i < _totalMembersInBodyPosNameEnum; i++)
+      {
+        string bodyPart = Enum.GetName(typeof(BodyPosName), i);
+        Debug.Log("bodyPosName: " + bodyPart);
+        var index = (BodyLandmarks)Enum.Parse(typeof(BodyLandmarks), bodyPart);
+        //Debug.Log("index: " + (int)index);
+        _bodyPositions[i] = MapMediapipePosition(_myNormalisedLandmarkList.Landmark[(int)index]) / _bodyScale;
+        //_bodyPositions[i].x = _myNormalisedLandmarkList.Landmark[(int)index].X * _bodyScale;
+        //_bodyPositions[i].y = _myNormalisedLandmarkList.Landmark[(int)index].Y * _bodyScale;
+        //_bodyPositions[i].z = _myNormalisedLandmarkList.Landmark[(int)index].Z * _bodyScale;
+      }
+    }
+
     private void InstantiateJointpositions()
     {
       for(int i = 0; i < _totalMembersInBodyPosNameEnum; i++)
@@ -84,6 +113,14 @@ namespace Mediapipe.Unity.PoseTracking
     }
 
     private void UpdateJointPositions()
+    {
+      for (int i = 0; i < _totalMembersInBodyPosNameEnum; i++)
+      {
+        _bodyObjects[i].transform.position = _bodyPositions[i];
+      }
+    }
+
+    private void UpdateNormalisedJointPositions()
     {
       for (int i = 0; i < _totalMembersInBodyPosNameEnum; i++)
       {
