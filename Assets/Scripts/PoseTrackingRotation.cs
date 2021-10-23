@@ -28,7 +28,7 @@ namespace Mediapipe.Unity.PoseTracking
     void Start()
     {
       _poseTrackingSolution = GameObject.FindObjectOfType<PoseTrackingSolution>();
-      _bodyPositions = new Vector3[16];
+      _bodyPositions = new Vector3[_totalMembersInBodyPosNameEnum];
       _bodyObjects = new GameObject[_totalMembersInBodyPosNameEnum];
       InstantiateJointpositions();
     }
@@ -39,7 +39,7 @@ namespace Mediapipe.Unity.PoseTracking
       //LandmarkList myLandmarkValues = poseTrackingSolution.value.poseWorldLandmarks;
       _myLandmarkList = _poseTrackingSolution.poseWorldLandmarkList;
       _myNormalisedLandmarkList = _poseTrackingSolution.poseNormalisedLandmarkList;
-      _firstRotationZ = _myLandmarkList.Landmark[(int)BodyLandmarks.Right_wrist].X;
+      //_firstRotationZ = _myLandmarkList.Landmark[(int)BodyLandmarks.Right_wrist].X;
       //Pose(myNormalisedLandmarkList.Landmark);
       //bodyPositions[(int)bodyPosName.WristLeft] = MapMediapipePosition(myNormalisedLandmarkList.Landmark[(int)bodyLandmarks.LEFT_WRIST]);
       //_bodyPositions[(int)BodyPosName.Left_wrist].x = _myLandmarkList.Landmark[(int)BodyLandmarks.Left_wrist].X;
@@ -62,6 +62,8 @@ namespace Mediapipe.Unity.PoseTracking
       //Debug.Log("Left Wrist: " + bodyPositions[(int)bodyPosName.Left_wrist].x);
       //myGO.transform.position = _bodyPositions[(int)BodyPosName.Left_wrist];
       UpdateJointPositions();
+
+      CalculateJointAngle(_bodyPositions[(int)BodyPosName.Left_shoulder], _bodyPositions[(int)BodyPosName.Left_shoulder], _bodyPositions[(int)BodyPosName.Left_shoulder]);
     }
 
     private Vector3 MapMediapipePosition(NormalizedLandmark landmark)
@@ -128,6 +130,13 @@ namespace Mediapipe.Unity.PoseTracking
       }
     }
 
+    private float CalculateJointAngle(Vector3 p0, Vector3 p1, Vector3 p2)
+    {
+      var side1 = p1 - p0;
+      var side2 = p2 - p0;
+      var jointAngle = Vector3.Angle(side1, side2);
+      return jointAngle;
+    }
     /*
 		public void Pose(RepeatedField<NormalizedLandmark> landmarks)
 		{
